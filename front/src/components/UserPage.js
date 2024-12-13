@@ -2,12 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Typography, Box, Grid, Card, CardContent, CardActions, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, AppBar, Toolbar } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const UserPage = () => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -34,6 +35,13 @@ const UserPage = () => {
     setSelectedTask(null);
   };
 
+  const handleLogout = () => {
+    // Clear any authentication tokens or user data
+    localStorage.removeItem('authToken');
+    // Redirect to the login page
+    navigate('/login');
+  };
+
   return (
     <Container maxWidth="md">
       <AppBar position="static">
@@ -43,6 +51,10 @@ const UserPage = () => {
           </Button>
           <Button color="inherit" component={Link} to="/upload">
             Task Upload Page
+          </Button>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button color="inherit" onClick={handleLogout}>
+            Logout
           </Button>
         </Toolbar>
       </AppBar>

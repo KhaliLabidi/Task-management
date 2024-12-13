@@ -1,12 +1,21 @@
 // front/src/components/AdminPage.js
 import React from 'react';
 import { Container, AppBar, Toolbar, Button, Box, Typography, Card, CardContent } from '@mui/material';
-import { Route, Routes, Link, Navigate } from 'react-router-dom';
+import { Route, Routes, Link, Navigate, useNavigate } from 'react-router-dom';
 import AdminUserList from './AdminUserList';
 import AdminCalendar from './AdminCalendar';
 import AdminDashboard from './AdminDashboard';
 
 const AdminPage = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear any authentication tokens or user data
+    localStorage.removeItem('authToken');
+    // Redirect to the login page
+    navigate('/login');
+  };
+
   return (
     <Container maxWidth="lg">
       <AppBar position="static">
@@ -19,6 +28,10 @@ const AdminPage = () => {
           </Button>
           <Button color="inherit" component={Link} to="/admin/dashboard">
             Task Dashboard
+          </Button>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button color="inherit" onClick={handleLogout}>
+            Logout
           </Button>
         </Toolbar>
       </AppBar>
