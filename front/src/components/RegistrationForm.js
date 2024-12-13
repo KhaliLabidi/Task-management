@@ -17,6 +17,7 @@ const RegistrationForm = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [step, setStep] = useState(1);
   const [open, setOpen] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -27,8 +28,20 @@ const RegistrationForm = () => {
     setFormData({ ...formData, captcha: value });
   };
 
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validatePassword(formData.password)) {
+      setPasswordError('Password must be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and special characters.');
+      return;
+    }
+
+    setPasswordError('');
 
     try {
       const response = await axios.post('http://localhost:5000/api/register', formData);
@@ -68,7 +81,7 @@ const RegistrationForm = () => {
     } catch (error) {
       console.error(error);
     }
-  };;
+  };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -119,6 +132,11 @@ const RegistrationForm = () => {
                         onChange={handleChange}
                         required
                       />
+                      {passwordError && (
+                        <Typography variant="body2" color="error">
+                          {passwordError}
+                        </Typography>
+                      )}
                       <TextField
                         fullWidth
                         margin="normal"
